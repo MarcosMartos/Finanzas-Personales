@@ -40,8 +40,8 @@ def fetch_notion_data():
             concepto_list = props.get("Concepto", {}).get("title", [])
             periodicidad_obj = props.get("Periodicidad", {}).get("select")
             tipo_obj = props.get("Tipo", {}).get("select")
-            categoria_obj = props.get("Categoría", {}).get("select")
-            subcat_obj = props.get("Sub-Categoría", {}).get("select")
+            categoria_obj = props.get("Categoria", {}).get("select")
+            subcat_obj = props.get("Sub-Categoria", {}).get("select")
             monto_val = props.get("Monto", {}).get("number")
 
             rows.append({
@@ -50,7 +50,7 @@ def fetch_notion_data():
                 "Periodicidad": periodicidad_obj.get("name") if periodicidad_obj else "Único",
                 "Tipo": tipo_obj.get("name") if tipo_obj else None,
                 "Categoria": categoria_obj.get("name") if categoria_obj else "Sin Categoría",
-                "Sub-Categoría": subcat_obj.get("name") if subcat_obj else None,
+                "Sub-Categoria": subcat_obj.get("name") if subcat_obj else None,
                 "Monto": monto_val if monto_val is not None else 0
             })
 
