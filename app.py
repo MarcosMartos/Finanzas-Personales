@@ -55,7 +55,7 @@ if ingresos_totales > 0:
 # --- Análisis gastos hormiga --- #
 
 # Filtramos específicamente la subcategoría 'Hormiga' dentro de los egresos
-gastos_hormiga_total = egresos[egresos['Sub_Categoria'] == 'Hormiga']['Monto'].sum()
+gastos_hormiga_total = egresos[egresos['Sub-Categoria'] == 'Hormiga']['Monto'].sum()
 porcentaje_hormiga = 0
 if egresos_totales > 0:
     porcentaje_hormiga = (gastos_hormiga_total / egresos_totales) * 100
@@ -63,7 +63,7 @@ if egresos_totales > 0:
 
 # --- RUNWAY --- #
 
-ahorros_actuales = 2600000
+ahorros_actuales = 3100000
 runway_meses = ahorros_actuales / mediana_mensual if mediana_mensual > 0 else 0
 
 
