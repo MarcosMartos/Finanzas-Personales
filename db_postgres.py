@@ -1,19 +1,14 @@
 import os
-import sqlite3
-import pandas as pd
 import requests
+import pandas as pd
+from sqlalchemy import create_engine # Nueva importación
 from dotenv import load_dotenv
 
-load_dotenv()
 
+
+load_dotenv()
 NOTION_TOKEN = os.getenv('NOTION_TOKEN')
 DATABASE_ID = os.getenv('DATABASE_ID')
-
-"""
-
-BASE DE DATOS EN SQLITE3
-
-"""
 
 def fetch_notion_data():
     url = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
@@ -66,16 +61,28 @@ def fetch_notion_data():
         
     return pd.DataFrame(rows)
 
-# Ejecución y guardado
-if not os.path.exists('Data'):
-    os.makedirs('Data')
+
+# Variables de entorno para Postgres
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
+DB_NAME = os.getenv('DB_NAME')
 
 df = fetch_notion_data()
 
 if not df.empty:
-    conn = sqlite3.connect('Data/gastos.db')
-    df.to_sql('gastos', conn, if_exists='replace', index=False)
-    conn.close()
-    print(f"Éxito: Se importaron {len(df)} registros totales.")
+    # 1. Crear la cadena de conexión (URL)
+    # formato: postgresql://usuario:password@host:puerto/nombre_bd
+    db_url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    
+    # 2. Crear el motor de conexión
+    engine = create_engine(db_url)
+    
+    # 3. Guardar en Postgres
+    # 'if_exists=replace' borrará la tabla y la creará de nuevo con los tipos de datos de Pandas
+    df.to_sql('gastos', engine, if_exists='replace', index=False)
+    
+    print(f"Éxito: Se importaron {len(df)} registros a PostgreSQL.")
 else:
     print("No se encontraron datos.")
